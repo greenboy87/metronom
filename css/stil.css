@@ -62,7 +62,7 @@ button { font-family: inherit; cursor: pointer; color: inherit; }
     background: var(--bg-erhoben);
     position: sticky; top: 0; z-index: 20;
 }
-.kopfzeile h1 { font-size: 1.15rem; }
+.kopfzeile h1 { font-size: 1.15rem; white-space: nowrap; }
 .kopfzeile .untertitel { color: var(--text-gedaempft); font-size: .8rem; }
 .kopfzeile .fuellt { flex: 1; }
 @media (max-width: 520px) { .kopfzeile .untertitel { display: none; } }
@@ -75,6 +75,12 @@ main {
     align-items: start;
 }
 @media (max-width: 860px) { main { grid-template-columns: minmax(0, 1fr); } }
+/* Einfache Ansicht: nur Drehrad, Start und Tippen - eine schmale Spalte. */
+main.einfach { grid-template-columns: minmax(0, 1fr); max-width: 560px; }
+main.einfach .nur-erweitert { display: none !important; }
+.modus-knopf { font-size: .85rem; padding: .45rem .8rem; border-radius: 999px; }
+.modus-knopf[aria-pressed="true"] { background: var(--akzent); border-color: var(--akzent); color: #04201d; }
+@media (max-width: 400px) { .kopfzeile { gap: .45rem; padding: .7rem .8rem; } .kopfzeile h1 { font-size: 1rem; } }
 
 .karte {
     background: var(--bg-karte); border: 1px solid var(--rand-schwach);

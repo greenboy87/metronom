@@ -65,7 +65,7 @@ function tempoAnzeigen() {
     const { name, deutsch } = tempoName(bpm);
     $('rad-name').textContent = name;
     $('rad-deutsch').textContent = deutsch;
-    $('rad-notenwert').textContent = { 2: '𝅗𝅥 =', 4: '♩ =', 8: '♪ =' }[metronom.nenner];
+    $('rad-notenwert').textContent = metronom.einfach ? '♩ =' : { 2: '𝅗𝅥 =', 4: '♩ =', 8: '♪ =' }[metronom.nenner];
     if (drehrad) drehrad.zeichnen();
 }
 
@@ -337,6 +337,22 @@ function stummUmschalten() {
     zeigeToast(stummGeschaltet ? '🔇 Ton aus – das Metronom läuft stumm weiter' : '🔊 Ton an');
 }
 $('stumm-knopf').addEventListener('click', stummUmschalten);
+
+/* Einfach / erweitert. Bewusst nicht gespeichert: die Seite startet fuer
+   Schueler immer in der einfachen Ansicht. */
+function modusSetzen(einfach) {
+    metronom.einfach = einfach;
+    $('haupt').classList.toggle('einfach', einfach);
+    const k = $('modus-knopf');
+    k.textContent = einfach ? 'Erweitert' : 'Einfach';
+    k.setAttribute('aria-pressed', String(!einfach));
+    if (einfach) {
+        $('still-hinweis').classList.add('hidden');
+        document.body.classList.remove('stiller-takt');
+    }
+    tempoAnzeigen();
+}
+$('modus-knopf').addEventListener('click', () => modusSetzen(!metronom.einfach));
 $('lautstaerke').addEventListener('input', e => { lautstaerkeSetzen(e.target.value); });
 $('lautstaerke').addEventListener('change', speichern);
 $('blitz-an').addEventListener('change', e => { blitzAn = e.target.checked; speichern(); });
@@ -424,3 +440,4 @@ formularFuellen();
 tempoAnzeigen();
 uebungszeitAnzeigen();
 laufZustandAnzeigen();
+modusSetzen(true);

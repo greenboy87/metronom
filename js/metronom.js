@@ -19,6 +19,10 @@ const metronom = {
     nenner: 4,
     betonung: ['hoch', 'tief', 'tief', 'tief'],
     unterteilung: 1,
+    // Einfacher Modus: gleichmaessige Viertel-Klicks ohne Betonung,
+    // Unterteilung, Trainer oder stille Takte. Die Experten-Einstellungen
+    // bleiben dabei erhalten und gelten wieder im erweiterten Modus.
+    einfach: true,
     klang: 'klick',
     trainer: { an: false, schritt: 5, alleTakte: 4, ziel: 140 },
     stille: { an: false, hoeren: 1, still: 1 },
@@ -56,13 +60,17 @@ function weckerHolen() {
     return mWecker;
 }
 
+function wirksameUnterteilung() {
+    return metronom.einfach ? 1 : metronom.unterteilung;
+}
+
 function tempoBegrenzen(bpm) {
     return Math.max(TEMPO_MIN, Math.min(TEMPO_MAX, Math.round(bpm)));
 }
 
 function istStillerTakt(takt) {
     const s = metronom.stille;
-    if (!s.an) return false;
+    if (!s.an || metronom.einfach) return false;
     const runde = Math.max(1, s.hoeren) + Math.max(1, s.still);
     return (takt % runde) >= Math.max(1, s.hoeren);
 }
@@ -71,7 +79,7 @@ function planeSchritt(ctx, zeit) {
     const still = istStillerTakt(mTakt);
     let art = null;
     if (mSub === 0) {
-        const b = metronom.betonung[mSchlag] || 'tief';
+        const b = metronom.einfach ? 'tief' : (metronom.betonung[mSchlag] || 'tief');
         if (b !== 'aus') art = b;
     } else {
         art = 'sub';
@@ -85,9 +93,9 @@ function planeSchritt(ctx, zeit) {
 }
 
 function weiterzaehlen() {
-    mNaechsteZeit += 60 / metronom.bpm / metronom.unterteilung;
+    mNaechsteZeit += 60 / metronom.bpm / wirksameUnterteilung();
     mSub++;
-    if (mSub >= metronom.unterteilung) {
+    if (mSub >= wirksameUnterteilung()) {
         mSub = 0;
         mSchlag++;
         if (mSchlag >= metronom.zaehler) {
@@ -102,7 +110,7 @@ function weiterzaehlen() {
    in beide Richtungen (schneller werden oder langsamer werden). */
 function tempoTrainerSchritt() {
     const t = metronom.trainer;
-    if (!t.an || mTakt === 0 || mTakt % Math.max(1, t.alleTakte) !== 0) return;
+    if (!t.an || metronom.einfach || mTakt === 0 || mTakt % Math.max(1, t.alleTakte) !== 0) return;
     const ziel = tempoBegrenzen(t.ziel);
     if (metronom.bpm === ziel) return;
     const schritt = Math.max(1, Math.abs(t.schritt));
@@ -118,7 +126,7 @@ function planer() {
     if (!metronom.laeuft || !ctx) return;
     // Aenderungen an Taktart/Unterteilung waehrend des Laufens abfangen
     if (mSchlag >= metronom.zaehler) { mSchlag = 0; mSub = 0; }
-    if (mSub >= metronom.unterteilung) mSub = 0;
+    if (mSub >= wirksameUnterteilung()) mSub = 0;
     // Nach einem Haenger (Tab lange schlafend) nicht alles nachholen
     if (mNaechsteZeit < ctx.currentTime - 0.2) mNaechsteZeit = ctx.currentTime + 0.05;
     while (mNaechsteZeit < ctx.currentTime + VORLAUF) {

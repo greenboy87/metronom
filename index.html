@@ -9,7 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏱️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/stil.css?v=5">
+<link rel="stylesheet" href="css/stil.css?v=6">
 </head>
 <body>
 
@@ -17,12 +17,13 @@
     <h1>⏱️ Metronom</h1>
     <span class="untertitel">Takt halten · Tempo finden · üben</span>
     <span class="fuellt"></span>
+    <button type="button" class="btn modus-knopf" id="modus-knopf" title="Zwischen einfacher und erweiterter Ansicht wechseln" aria-pressed="false">Erweitert</button>
     <button type="button" class="btn rund" id="stumm-knopf" title="Ton aus/an (Taste M)" aria-label="Ton aus" aria-pressed="false">🔊</button>
     <button type="button" class="btn rund" id="hilfe-knopf" title="Kurze Anleitung" aria-label="Kurze Anleitung">?</button>
     <button type="button" class="btn rund" id="theme-knopf" title="Helles/dunkles Layout umschalten" aria-label="Helles/dunkles Layout umschalten">◐</button>
 </header>
 
-<main>
+<main class="einfach" id="haupt">
     <!-- ================= Bühne: Drehrad, Start, Schläge ================= -->
     <section class="buehne karte">
         <div class="drehrad" id="drehrad" role="slider" tabindex="0"
@@ -58,16 +59,16 @@
             <span class="tipp-klein" id="tipp-info">mindestens 2× tippen · Taste T</span>
         </button>
 
-        <div class="still-hinweis hidden" id="still-hinweis">🤫 Stiller Takt – zähl im Kopf weiter!</div>
+        <div class="still-hinweis hidden nur-erweitert" id="still-hinweis">🤫 Stiller Takt – zähl im Kopf weiter!</div>
 
-        <div class="schlaege" id="schlaege" aria-label="Schläge im Takt"></div>
-        <p class="hinweis zentriert">Tippe auf einen Schlag: <b>hoch</b> → <b>tief</b> → <b>aus</b></p>
+        <div class="schlaege nur-erweitert" id="schlaege" aria-label="Schläge im Takt"></div>
+        <p class="hinweis zentriert nur-erweitert">Tippe auf einen Schlag: <b>hoch</b> → <b>tief</b> → <b>aus</b></p>
 
-        <div class="zaehlhilfe" id="zaehlhilfe" aria-live="off"></div>
+        <div class="zaehlhilfe nur-erweitert" id="zaehlhilfe" aria-live="off"></div>
     </section>
 
     <!-- ================= Einstellungen ================= -->
-    <div class="einstellungen">
+    <div class="einstellungen nur-erweitert">
         <section class="karte">
             <h2>Taktart</h2>
             <div class="chips" id="taktart-vorlagen">
@@ -170,6 +171,7 @@
         <li><b>Tempo ändern:</b> am äußeren Ring drehen, die Knöpfe −5/−1/+1/+5 oder die Pfeiltasten.</li>
         <li><b>Ton aus:</b> Lautsprecher-Knopf oben rechts oder Taste M – das Metronom läuft stumm weiter.</li>
         <li><b>Tempo tippen:</b> mehrmals gleichmäßig auf das Tipp-Feld tippen (oder Taste T).</li>
+        <li><b>Erweitert:</b> oben rechts schaltest du Taktart, Betonung, Zählhilfe und alle weiteren Funktionen ein. Die Seite startet immer in der einfachen Ansicht.</li>
         <li><b>Schläge:</b> jeden Schlag antippen, um ihn hoch, tief oder stumm zu stellen.</li>
         <li><b>Unterteilung:</b> leise Zwischenklicks für Achtel, Triolen oder Sechzehntel.</li>
         <li><b>Tempo-Trainer</b> und <b>Stille Takte</b> findest du unten bei den Einstellungen.</li>
@@ -181,10 +183,10 @@
 <div class="blitz" id="blitz" aria-hidden="true"></div>
 <div class="toast hidden" id="toast" role="status"></div>
 
-<script src="js/version.js?v=5"></script>
-<script src="js/audio.js?v=5"></script>
-<script src="js/metronom.js?v=5"></script>
-<script src="js/drehrad.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
+<script src="js/version.js?v=6"></script>
+<script src="js/audio.js?v=6"></script>
+<script src="js/metronom.js?v=6"></script>
+<script src="js/drehrad.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 </body>
 </html>
