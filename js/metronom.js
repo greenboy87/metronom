@@ -164,6 +164,7 @@ function metronomStoppen() {
     }
     mGeplanteKnoten = [];
     mAnzeigeSchlange = [];
+    wiedergabeModusPause();
     if (metronom.beiStopp) metronom.beiStopp();
 }
 

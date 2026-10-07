@@ -228,7 +228,7 @@ function umschalten() {
         uebungTimer = setInterval(uebungszeitAnzeigen, 1000);
         wachHaltenAn();
         laufZustandAnzeigen();
-    }).catch(() => zeigeToast('Kein Ton möglich – tippe noch einmal auf Start.'));
+    }).catch(() => zeigeToast('Kein Ton – tippe noch einmal auf Start. Hilft das nicht: Browser ganz schließen und neu öffnen.'));
 }
 
 $('start-knopf').addEventListener('click', umschalten);
