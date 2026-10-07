@@ -325,6 +325,18 @@ $('klang-wahl').addEventListener('click', e => {
         audioBereit().then(ctx => spieleKlang(ctx, ctx.currentTime + 0.01, 'hoch', metronom.klang)).catch(() => {});
     }
 });
+/* Bewusst nicht gespeichert: eine Seite, die beim naechsten Oeffnen
+   kommentarlos stumm bleibt, sieht aus wie ein Fehler. */
+function stummUmschalten() {
+    stummSetzen(!stummGeschaltet);
+    const k = $('stumm-knopf');
+    k.textContent = stummGeschaltet ? '🔇' : '🔊';
+    k.classList.toggle('stumm', stummGeschaltet);
+    k.setAttribute('aria-pressed', String(stummGeschaltet));
+    k.setAttribute('aria-label', stummGeschaltet ? 'Ton an' : 'Ton aus');
+    zeigeToast(stummGeschaltet ? '🔇 Ton aus – das Metronom läuft stumm weiter' : '🔊 Ton an');
+}
+$('stumm-knopf').addEventListener('click', stummUmschalten);
 $('lautstaerke').addEventListener('input', e => { lautstaerkeSetzen(e.target.value); });
 $('lautstaerke').addEventListener('change', speichern);
 $('blitz-an').addEventListener('change', e => { blitzAn = e.target.checked; speichern(); });
@@ -371,6 +383,8 @@ document.addEventListener('keydown', e => {
         // Leertaste auf einem fokussierten Knopf wuerde ihn zusaetzlich ausloesen
         e.preventDefault();
         umschalten();
+    } else if (e.key === 'm' || e.key === 'M') {
+        stummUmschalten();
     } else if (e.key === 't' || e.key === 'T') {
         tippen();
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {

@@ -9,7 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏱️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/stil.css?v=4">
+<link rel="stylesheet" href="css/stil.css?v=5">
 </head>
 <body>
 
@@ -17,6 +17,7 @@
     <h1>⏱️ Metronom</h1>
     <span class="untertitel">Takt halten · Tempo finden · üben</span>
     <span class="fuellt"></span>
+    <button type="button" class="btn rund" id="stumm-knopf" title="Ton aus/an (Taste M)" aria-label="Ton aus" aria-pressed="false">🔊</button>
     <button type="button" class="btn rund" id="hilfe-knopf" title="Kurze Anleitung" aria-label="Kurze Anleitung">?</button>
     <button type="button" class="btn rund" id="theme-knopf" title="Helles/dunkles Layout umschalten" aria-label="Helles/dunkles Layout umschalten">◐</button>
 </header>
@@ -167,6 +168,7 @@
     <ul>
         <li><b>Start/Stopp:</b> Mitte des Rads antippen, Start-Knopf oder Leertaste.</li>
         <li><b>Tempo ändern:</b> am äußeren Ring drehen, die Knöpfe −5/−1/+1/+5 oder die Pfeiltasten.</li>
+        <li><b>Ton aus:</b> Lautsprecher-Knopf oben rechts oder Taste M – das Metronom läuft stumm weiter.</li>
         <li><b>Tempo tippen:</b> mehrmals gleichmäßig auf das Tipp-Feld tippen (oder Taste T).</li>
         <li><b>Schläge:</b> jeden Schlag antippen, um ihn hoch, tief oder stumm zu stellen.</li>
         <li><b>Unterteilung:</b> leise Zwischenklicks für Achtel, Triolen oder Sechzehntel.</li>
@@ -179,10 +181,10 @@
 <div class="blitz" id="blitz" aria-hidden="true"></div>
 <div class="toast hidden" id="toast" role="status"></div>
 
-<script src="js/version.js?v=4"></script>
-<script src="js/audio.js?v=4"></script>
-<script src="js/metronom.js?v=4"></script>
-<script src="js/drehrad.js?v=4"></script>
-<script src="js/app.js?v=4"></script>
+<script src="js/version.js?v=5"></script>
+<script src="js/audio.js?v=5"></script>
+<script src="js/metronom.js?v=5"></script>
+<script src="js/drehrad.js?v=5"></script>
+<script src="js/app.js?v=5"></script>
 </body>
 </html>

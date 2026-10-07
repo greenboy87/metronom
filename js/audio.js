@@ -6,7 +6,7 @@
    ============================================================ */
 
 let audioCtx = null, audioEntsperrt = false;
-let lautstaerkeKnoten = null, lautstaerke = 0.7;
+let lautstaerkeKnoten = null, lautstaerke = 0.7, stummGeschaltet = false;
 
 /* Ein AudioContext kann 'running' melden und trotzdem ins Leere rendern,
    wenn ein Geraetewechsel (Bluetooth, Beamer per HDMI) ihm die Ausgabe
@@ -25,14 +25,20 @@ if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
 function lautstaerkeZiel(ctx) {
     if (!lautstaerkeKnoten || lautstaerkeKnoten.context !== ctx) {
         lautstaerkeKnoten = ctx.createGain();
-        lautstaerkeKnoten.gain.value = lautstaerke;
+        lautstaerkeKnoten.gain.value = stummGeschaltet ? 0 : lautstaerke;
         lautstaerkeKnoten.connect(ctx.destination);
     }
     return lautstaerkeKnoten;
 }
 function lautstaerkeSetzen(wert) {
     lautstaerke = Math.max(0, Math.min(1, Number(wert)));
-    if (lautstaerkeKnoten) lautstaerkeKnoten.gain.value = lautstaerke;
+    if (lautstaerkeKnoten) lautstaerkeKnoten.gain.value = stummGeschaltet ? 0 : lautstaerke;
+}
+/* Stummschalter: setzt nur den Ausgang auf 0, die eingestellte Lautstaerke
+   bleibt erhalten und gilt sofort wieder beim Einschalten. */
+function stummSetzen(an) {
+    stummGeschaltet = !!an;
+    if (lautstaerkeKnoten) lautstaerkeKnoten.gain.value = stummGeschaltet ? 0 : lautstaerke;
 }
 
 /* Safari bleibt stumm, solange nicht in einer Geste ein (stiller) Puffer lief. */

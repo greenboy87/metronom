@@ -105,6 +105,7 @@ details.karte[open] summary { margin-bottom: .6rem; }
 .btn:active { transform: scale(.96); }
 .btn.klein { font-size: .82rem; padding: .4rem .7rem; }
 .btn.rund { width: 2.4rem; height: 2.4rem; padding: 0; border-radius: 50%; }
+#stumm-knopf.stumm { background: var(--gefahr); border-color: var(--gefahr); }
 .btn.start {
     background: var(--akzent); border-color: var(--akzent); color: #04201d;
     min-width: 7.5rem; font-size: 1.1rem;
