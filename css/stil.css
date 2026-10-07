@@ -1,0 +1,288 @@
+/* ============================================================
+   Metronom: Theme und Layout.
+   Dunkel ist die Voreinstellung, hell per [data-theme="light"]
+   auf <html> - umgeschaltet und gemerkt von app.js.
+   ============================================================ */
+:root {
+    --bg: #0b1120;
+    --bg-erhoben: #111827;
+    --bg-karte: #0f172a;
+    --rand: #334155;
+    --rand-schwach: #1e293b;
+    --text: #e2e8f0;
+    --text-gedaempft: #94a3b8;
+    --text-schwach: #64748b;
+    --akzent: #2dd4bf;
+    --akzent-stark: #14b8a6;
+    --akzent-weich: rgba(45, 212, 191, .16);
+    --hoch: #f59e0b;
+    --hoch-weich: rgba(245, 158, 11, .22);
+    --tief: #38bdf8;
+    --aus: #475569;
+    --gefahr: #f43f5e;
+    --schatten: 0 10px 30px -10px rgba(0,0,0,.5);
+}
+html[data-theme="light"] {
+    --bg: #f8fafc;
+    --bg-erhoben: #ffffff;
+    --bg-karte: #ffffff;
+    --rand: #cbd5e1;
+    --rand-schwach: #e2e8f0;
+    --text: #0f172a;
+    --text-gedaempft: #475569;
+    --text-schwach: #94a3b8;
+    --akzent: #0d9488;
+    --akzent-stark: #0f766e;
+    --akzent-weich: rgba(13, 148, 136, .12);
+    --hoch: #d97706;
+    --hoch-weich: rgba(217, 119, 6, .18);
+    --tief: #0284c7;
+    --aus: #cbd5e1;
+    --gefahr: #e11d48;
+    --schatten: 0 10px 30px -12px rgba(15,23,42,.18);
+}
+
+* { box-sizing: border-box; }
+.hidden { display: none !important; }
+html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+}
+body { min-height: 100vh; padding-bottom: 3rem; -webkit-tap-highlight-color: transparent; }
+h1, h2 { font-weight: 800; margin: 0; }
+h2 { font-size: 1rem; margin-bottom: .7rem; }
+button { font-family: inherit; cursor: pointer; color: inherit; }
+
+/* ---------- Kopfzeile ---------- */
+.kopfzeile {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .8rem 1.2rem; border-bottom: 1px solid var(--rand-schwach);
+    background: var(--bg-erhoben);
+    position: sticky; top: 0; z-index: 20;
+}
+.kopfzeile h1 { font-size: 1.15rem; }
+.kopfzeile .untertitel { color: var(--text-gedaempft); font-size: .8rem; }
+.kopfzeile .fuellt { flex: 1; }
+@media (max-width: 520px) { .kopfzeile .untertitel { display: none; } }
+
+/* ---------- Grundbausteine ---------- */
+main {
+    max-width: 1100px; margin: 1.2rem auto 0; padding: 0 1rem;
+    display: grid; gap: 1.2rem;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: start;
+}
+@media (max-width: 860px) { main { grid-template-columns: minmax(0, 1fr); } }
+
+.karte {
+    background: var(--bg-karte); border: 1px solid var(--rand-schwach);
+    border-radius: 16px; padding: 1.1rem; box-shadow: var(--schatten);
+}
+.einstellungen { display: grid; gap: 1rem; }
+details.karte summary {
+    font-size: 1rem; font-weight: 800; cursor: pointer; list-style: none;
+}
+details.karte summary::-webkit-details-marker { display: none; }
+details.karte summary::before {
+    content: '▸'; display: inline-block; margin-right: .4rem; color: var(--text-schwach);
+    transition: transform .15s;
+}
+details.karte[open] summary::before { transform: rotate(90deg); }
+details.karte[open] summary { margin-bottom: .6rem; }
+
+.hinweis { color: var(--text-gedaempft); font-size: .85rem; margin: .5rem 0; line-height: 1.45; }
+.zentriert { text-align: center; }
+
+.btn {
+    border: 1px solid var(--rand); background: var(--bg-erhoben);
+    border-radius: 12px; padding: .55rem .9rem; font-weight: 700; font-size: 1rem;
+    transition: border-color .12s, background .12s, transform .08s;
+    touch-action: manipulation;
+}
+.btn:hover { border-color: var(--akzent); }
+.btn:active { transform: scale(.96); }
+.btn.klein { font-size: .82rem; padding: .4rem .7rem; }
+.btn.rund { width: 2.4rem; height: 2.4rem; padding: 0; border-radius: 50%; }
+.btn.start {
+    background: var(--akzent); border-color: var(--akzent); color: #04201d;
+    min-width: 7.5rem; font-size: 1.1rem;
+}
+.btn.start.laeuft { background: var(--gefahr); border-color: var(--gefahr); color: #fff; }
+
+.chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.chip {
+    border: 1px solid var(--rand); background: transparent; border-radius: 999px;
+    padding: .45rem .9rem; font-weight: 700; font-size: .95rem; min-width: 3rem;
+    touch-action: manipulation;
+}
+.chip:hover { border-color: var(--akzent); }
+.chip.gewaehlt { background: var(--akzent); border-color: var(--akzent); color: #04201d; }
+#unterteilung-wahl .chip { font-size: 1.3rem; min-width: 3.4rem; padding: .3rem .8rem; }
+
+:focus-visible { outline: 3px solid var(--akzent); outline-offset: 2px; }
+
+/* ---------- Drehrad ---------- */
+.buehne { display: flex; flex-direction: column; align-items: center; gap: .6rem; }
+.drehrad {
+    position: relative; width: min(100%, 380px); aspect-ratio: 1;
+    touch-action: none; user-select: none; -webkit-user-select: none;
+    border-radius: 50%; cursor: grab;
+}
+.drehrad.dreht { cursor: grabbing; }
+.drehrad svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.rad-spur { fill: none; stroke: var(--rand-schwach); stroke-width: 34; opacity: .6; }
+html[data-theme="light"] .rad-spur { stroke: #e2e8f0; }
+.rad-strich { stroke: var(--text-schwach); stroke-width: 2; stroke-linecap: round; }
+.rad-strich.lang { stroke: var(--text-gedaempft); stroke-width: 3; }
+.rad-griff { fill: var(--akzent); stroke: var(--bg-karte); stroke-width: 3; }
+.drehrad.dreht .rad-griff { fill: var(--hoch); }
+.rad-bereich-hinten { fill: none; stroke: var(--rand-schwach); stroke-width: 6; stroke-linecap: round; }
+.rad-bereich { fill: none; stroke: var(--akzent); stroke-width: 6; stroke-linecap: round; }
+
+.rad-mitte {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 58%; height: 58%; border-radius: 50%;
+    border: 2px solid var(--rand); background: var(--bg-erhoben);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: .1rem; cursor: pointer; touch-action: manipulation;
+    transition: border-color .15s;
+}
+.rad-mitte:hover { border-color: var(--akzent); }
+.rad-mitte.laeuft { border-color: var(--akzent); }
+.rad-notenwert { font-size: clamp(.8rem, 3vw, 1rem); color: var(--text-gedaempft); }
+.rad-bpm {
+    font-size: clamp(2.8rem, 13vw, 4.6rem); font-weight: 900; line-height: 1;
+    font-variant-numeric: tabular-nums; letter-spacing: -.03em;
+}
+.rad-name { font-weight: 800; color: var(--akzent); font-size: clamp(.85rem, 3.2vw, 1.05rem); }
+.rad-deutsch { font-size: clamp(.7rem, 2.6vw, .82rem); color: var(--text-gedaempft); }
+
+@keyframes puls { from { box-shadow: 0 0 0 0 var(--akzent-weich), inset 0 0 0 999px var(--akzent-weich); } to { box-shadow: 0 0 0 22px transparent, inset 0 0 0 999px transparent; } }
+@keyframes puls-hoch { from { box-shadow: 0 0 0 0 var(--hoch-weich), inset 0 0 0 999px var(--hoch-weich); } to { box-shadow: 0 0 0 30px transparent, inset 0 0 0 999px transparent; } }
+.rad-mitte.puls { animation: puls .35s ease-out; }
+.rad-mitte.puls-hoch { animation: puls-hoch .4s ease-out; border-color: var(--hoch); }
+
+.feinstufen { display: flex; gap: .45rem; flex-wrap: wrap; justify-content: center; }
+.feinstufen .btn:not(.start) { min-width: 3.2rem; }
+
+/* ---------- Tipp-Feld ---------- */
+.tipp-feld {
+    width: 100%; max-width: 460px; margin-top: .4rem;
+    border: 2px dashed var(--rand); border-radius: 16px; background: transparent;
+    padding: 1.1rem 1rem; display: flex; flex-direction: column; gap: .25rem;
+    touch-action: manipulation; user-select: none; -webkit-user-select: none;
+}
+.tipp-feld:hover { border-color: var(--akzent); }
+.tipp-gross { font-size: 1.15rem; font-weight: 800; }
+.tipp-klein { font-size: .85rem; color: var(--text-gedaempft); }
+@keyframes tipp { from { background: var(--akzent-weich); border-color: var(--akzent); } to { background: transparent; } }
+.tipp-feld.tippt { animation: tipp .3s ease-out; }
+
+/* ---------- Schläge ---------- */
+.schlaege {
+    display: grid; gap: .45rem; width: 100%; margin-top: .6rem;
+    grid-template-columns: repeat(var(--anzahl, 4), minmax(0, 1fr));
+    max-width: calc(var(--anzahl, 4) * 5.2rem);
+}
+@media (max-width: 520px) {
+    .schlaege { gap: .3rem; grid-template-columns: repeat(min(var(--anzahl, 4), 8), minmax(0, 1fr)); }
+    .schlag { height: 5.4rem; border-radius: 10px; }
+    .schlag-art { font-size: .6rem; letter-spacing: 0; }
+    .feinstufen { flex-wrap: nowrap; gap: .3rem; width: 100%; }
+    .feinstufen .btn:not(.start) { min-width: 0; flex: 1; padding: .55rem .2rem; }
+    .btn.start { min-width: 0; flex: 2; }
+}
+.schlag {
+    border: 2px solid var(--rand-schwach); background: var(--bg-erhoben);
+    border-radius: 12px; padding: .5rem .2rem .4rem;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: .25rem;
+    height: 6.2rem; touch-action: manipulation;
+    transition: transform .08s, border-color .1s;
+}
+.schlag-balken { width: 60%; border-radius: 6px; transition: height .15s, background .15s; }
+.schlag.ist-hoch .schlag-balken { height: 2.6rem; background: var(--hoch); }
+.schlag.ist-tief .schlag-balken { height: 1.4rem; background: var(--tief); }
+.schlag.ist-aus .schlag-balken { height: .35rem; background: var(--aus); }
+.schlag-zahl { font-weight: 900; font-size: 1.05rem; }
+.schlag-art { font-size: .7rem; color: var(--text-gedaempft); text-transform: uppercase; letter-spacing: .05em; }
+.schlag.ist-aus .schlag-zahl { color: var(--text-schwach); }
+.schlag.aktiv { border-color: var(--text); transform: scale(1.06); }
+.schlag.aktiv.ist-hoch { border-color: var(--hoch); box-shadow: 0 0 18px var(--hoch-weich); }
+.schlag.aktiv.ist-tief { border-color: var(--tief); }
+
+/* ---------- Zählhilfe ---------- */
+.zaehlhilfe {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: .3rem .9rem;
+    margin-top: .3rem; font-size: 1.25rem; font-weight: 700; min-height: 2rem;
+}
+.silben-gruppe { display: inline-flex; gap: .35rem; }
+.silbe { color: var(--text-schwach); padding: 0 .15rem; border-radius: 6px; transition: color .08s; }
+.silbe.haupt { color: var(--text-gedaempft); font-weight: 900; }
+.silbe.aktiv { color: var(--bg); background: var(--akzent); }
+body.stiller-takt .silbe.aktiv { background: var(--text-schwach); }
+
+.still-hinweis {
+    background: var(--hoch-weich); color: var(--text); border: 1px solid var(--hoch);
+    border-radius: 12px; padding: .5rem .9rem; font-weight: 800;
+}
+body.stiller-takt .schlag.aktiv { opacity: .55; }
+
+/* ---------- Einstellungen ---------- */
+.taktart-eigen { display: flex; align-items: center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; margin-top: .9rem; }
+.stepper { display: flex; align-items: center; gap: .6rem; }
+.stepper .btn { width: 2.6rem; height: 2.6rem; padding: 0; font-size: 1.3rem; }
+.bruch {
+    display: inline-flex; flex-direction: column; align-items: center;
+    font-size: 1.5rem; font-weight: 900; line-height: 1.05; min-width: 3rem;
+}
+.bruch > span { border-bottom: 3px solid var(--text); padding: 0 .4rem; }
+.bruch select {
+    font: inherit; color: inherit; background: transparent; border: none;
+    text-align: center; text-align-last: center; cursor: pointer; padding: 0 .2rem;
+}
+.bruch select option { background: var(--bg-erhoben); }
+
+.regler { display: flex; align-items: center; gap: .6rem; margin-top: .9rem; }
+.regler input { flex: 1; accent-color: var(--akzent); }
+.schalter { display: flex; align-items: center; gap: .55rem; margin-top: .7rem; font-weight: 600; cursor: pointer; }
+.schalter input { width: 1.2rem; height: 1.2rem; accent-color: var(--akzent); }
+
+.formular { display: flex; flex-wrap: wrap; gap: .6rem 1rem; margin-top: .7rem; }
+.formular label { display: flex; align-items: center; gap: .4rem; font-weight: 600; }
+.formular input {
+    width: 4.2rem; font: inherit; font-weight: 800; text-align: center;
+    background: var(--bg-erhoben); color: var(--text);
+    border: 1px solid var(--rand); border-radius: 10px; padding: .35rem .3rem;
+}
+
+.uebungszeit { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+#uebungszeit { font-size: 2rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+
+/* ---------- Blitz, Toast, Dialog ---------- */
+.blitz {
+    position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0;
+    box-shadow: inset 0 0 0 10px var(--tief);
+}
+.blitz.an-hoch { box-shadow: inset 0 0 0 14px var(--hoch); }
+@keyframes blitz { from { opacity: .9; } to { opacity: 0; } }
+.blitz.an, .blitz.an-hoch { animation: blitz .25s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+    .blitz.an, .blitz.an-hoch { animation-duration: .12s; }
+}
+
+.toast {
+    position: fixed; left: 50%; bottom: 1.5rem; transform: translateX(-50%); z-index: 60;
+    background: var(--bg-erhoben); border: 1px solid var(--akzent); border-radius: 12px;
+    padding: .7rem 1.1rem; font-weight: 700; box-shadow: var(--schatten);
+    max-width: calc(100% - 2rem);
+}
+
+dialog {
+    background: var(--bg-karte); color: var(--text); border: 1px solid var(--rand);
+    border-radius: 16px; padding: 1.4rem; max-width: min(92vw, 30rem); box-shadow: var(--schatten);
+}
+dialog::backdrop { background: rgba(0,0,0,.55); }
+dialog ul { padding-left: 1.2rem; line-height: 1.55; }
+dialog form { text-align: right; margin-top: .8rem; }

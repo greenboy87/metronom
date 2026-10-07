@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Metronom</title>
+<meta name="description" content="Metronom für den Musikunterricht: Taktart, Betonung je Schlag, Tempo tippen oder am Rad drehen, Tempo-Trainer und stille Takte.">
+<meta name="theme-color" content="#0b1120">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏱️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/stil.css?v=1">
+</head>
+<body>
+
+<header class="kopfzeile">
+    <h1>⏱️ Metronom</h1>
+    <span class="untertitel">Takt halten · Tempo finden · üben</span>
+    <span class="fuellt"></span>
+    <button type="button" class="btn rund" id="hilfe-knopf" title="Kurze Anleitung" aria-label="Kurze Anleitung">?</button>
+    <button type="button" class="btn rund" id="theme-knopf" title="Helles/dunkles Layout umschalten" aria-label="Helles/dunkles Layout umschalten">◐</button>
+</header>
+
+<main>
+    <!-- ================= Bühne: Drehrad, Start, Schläge ================= -->
+    <section class="buehne karte">
+        <div class="drehrad" id="drehrad" role="slider" tabindex="0"
+             aria-label="Tempo in Schlägen pro Minute" aria-valuemin="20" aria-valuemax="260" aria-valuenow="100">
+            <svg viewBox="0 0 300 300" aria-hidden="true">
+                <circle class="rad-spur" cx="150" cy="150" r="128"></circle>
+                <g id="rad-drehteil">
+                    <g id="rad-striche"></g>
+                    <circle class="rad-griff" cx="150" cy="22" r="11"></circle>
+                </g>
+                <path class="rad-bereich-hinten" id="rad-bereich-hinten"></path>
+                <path class="rad-bereich" id="rad-bereich"></path>
+            </svg>
+            <button type="button" class="rad-mitte" id="rad-mitte" title="Start / Stopp (Leertaste)">
+                <span class="rad-notenwert" id="rad-notenwert">♩ =</span>
+                <span class="rad-bpm" id="rad-bpm">100</span>
+                <span class="rad-name" id="rad-name">Andante</span>
+                <span class="rad-deutsch" id="rad-deutsch">gehend</span>
+            </button>
+        </div>
+        <p class="hinweis zentriert">Am Ring drehen = schneller / langsamer</p>
+
+        <div class="feinstufen">
+            <button type="button" class="btn" data-tempo-schritt="-5">−5</button>
+            <button type="button" class="btn" data-tempo-schritt="-1">−1</button>
+            <button type="button" class="btn start" id="start-knopf">▶ Start</button>
+            <button type="button" class="btn" data-tempo-schritt="1">+1</button>
+            <button type="button" class="btn" data-tempo-schritt="5">+5</button>
+        </div>
+
+        <button type="button" class="tipp-feld" id="tipp-feld">
+            <span class="tipp-gross">👆 Hier im Tempo tippen</span>
+            <span class="tipp-klein" id="tipp-info">mindestens 2× tippen · Taste T</span>
+        </button>
+
+        <div class="still-hinweis hidden" id="still-hinweis">🤫 Stiller Takt – zähl im Kopf weiter!</div>
+
+        <div class="schlaege" id="schlaege" aria-label="Schläge im Takt"></div>
+        <p class="hinweis zentriert">Tippe auf einen Schlag: <b>hoch</b> → <b>tief</b> → <b>aus</b></p>
+
+        <div class="zaehlhilfe" id="zaehlhilfe" aria-live="off"></div>
+    </section>
+
+    <!-- ================= Einstellungen ================= -->
+    <div class="einstellungen">
+        <section class="karte">
+            <h2>Taktart</h2>
+            <div class="chips" id="taktart-vorlagen">
+                <button type="button" class="chip" data-takt="2/4">2/4</button>
+                <button type="button" class="chip" data-takt="3/4">3/4</button>
+                <button type="button" class="chip" data-takt="4/4">4/4</button>
+                <button type="button" class="chip" data-takt="5/4">5/4</button>
+                <button type="button" class="chip" data-takt="6/8">6/8</button>
+                <button type="button" class="chip" data-takt="7/8">7/8</button>
+                <button type="button" class="chip" data-takt="12/8">12/8</button>
+            </div>
+            <div class="taktart-eigen">
+                <div class="stepper">
+                    <button type="button" class="btn" id="zaehler-minus" aria-label="Weniger Schläge">−</button>
+                    <span class="bruch">
+                        <span id="zaehler-anzeige">4</span>
+                        <select id="nenner-wahl" aria-label="Notenwert">
+                            <option value="2">2</option>
+                            <option value="4" selected>4</option>
+                            <option value="8">8</option>
+                        </select>
+                    </span>
+                    <button type="button" class="btn" id="zaehler-plus" aria-label="Mehr Schläge">+</button>
+                </div>
+                <button type="button" class="btn klein" id="betonung-zuruecksetzen">Betonung zurücksetzen</button>
+            </div>
+        </section>
+
+        <section class="karte">
+            <h2>Unterteilung</h2>
+            <div class="chips" id="unterteilung-wahl">
+                <button type="button" class="chip" data-unterteilung="1" title="nur Grundschläge">♩</button>
+                <button type="button" class="chip" data-unterteilung="2" title="Achtel">♫</button>
+                <button type="button" class="chip" data-unterteilung="3" title="Triolen">3er</button>
+                <button type="button" class="chip" data-unterteilung="4" title="Sechzehntel">♬</button>
+            </div>
+            <p class="hinweis" id="unterteilung-text">Nur die Grundschläge.</p>
+        </section>
+
+        <section class="karte">
+            <h2>Klang</h2>
+            <div class="chips" id="klang-wahl">
+                <button type="button" class="chip" data-klang="klick">Klick</button>
+                <button type="button" class="chip" data-klang="holz">Holzblock</button>
+                <button type="button" class="chip" data-klang="piep">Piepton</button>
+            </div>
+            <label class="regler">
+                <span>🔈</span>
+                <input type="range" id="lautstaerke" min="0" max="1" step="0.05" value="0.7" aria-label="Lautstärke">
+                <span>🔊</span>
+            </label>
+            <label class="schalter">
+                <input type="checkbox" id="blitz-an" checked>
+                <span>Bildschirm blinkt im Takt</span>
+            </label>
+        </section>
+
+        <details class="karte" id="trainer-karte">
+            <summary>🚀 Tempo-Trainer</summary>
+            <p class="hinweis">Das Tempo ändert sich von selbst – langsam anfangen, sicher schneller werden.</p>
+            <label class="schalter">
+                <input type="checkbox" id="trainer-an">
+                <span>Trainer einschalten</span>
+            </label>
+            <div class="formular">
+                <label>alle <input type="number" id="trainer-takte" min="1" max="32" value="4"> Takte</label>
+                <label>um <input type="number" id="trainer-schritt" min="1" max="30" value="5"> BPM</label>
+                <label>bis <input type="number" id="trainer-ziel" min="20" max="260" value="140"> BPM</label>
+            </div>
+        </details>
+
+        <details class="karte" id="stille-karte">
+            <summary>🤫 Stille Takte</summary>
+            <p class="hinweis">Das Metronom setzt aus – kannst du das Tempo allein halten? Wenn es wieder einsetzt, merkst du, ob du noch im Takt bist.</p>
+            <label class="schalter">
+                <input type="checkbox" id="stille-an">
+                <span>Stille Takte einschalten</span>
+            </label>
+            <div class="formular">
+                <label><input type="number" id="stille-hoeren" min="1" max="16" value="2"> Takte hören</label>
+                <label><input type="number" id="stille-still" min="1" max="16" value="2"> Takte still</label>
+            </div>
+        </details>
+
+        <section class="karte">
+            <h2>Übungszeit</h2>
+            <div class="uebungszeit">
+                <span id="uebungszeit">0:00</span>
+                <button type="button" class="btn klein" id="uebungszeit-reset">Zurücksetzen</button>
+            </div>
+            <p class="hinweis">Läuft nur, solange das Metronom spielt.</p>
+        </section>
+    </div>
+</main>
+
+<dialog id="hilfe">
+    <h2>So funktioniert's</h2>
+    <ul>
+        <li><b>Start/Stopp:</b> Mitte des Rads antippen, Start-Knopf oder Leertaste.</li>
+        <li><b>Tempo ändern:</b> am äußeren Ring drehen, die Knöpfe −5/−1/+1/+5 oder die Pfeiltasten.</li>
+        <li><b>Tempo tippen:</b> mehrmals gleichmäßig auf das Tipp-Feld tippen (oder Taste T).</li>
+        <li><b>Schläge:</b> jeden Schlag antippen, um ihn hoch, tief oder stumm zu stellen.</li>
+        <li><b>Unterteilung:</b> leise Zwischenklicks für Achtel, Triolen oder Sechzehntel.</li>
+        <li><b>Tempo-Trainer</b> und <b>Stille Takte</b> findest du unten bei den Einstellungen.</li>
+    </ul>
+    <p class="hinweis">Deine Einstellungen werden auf diesem Gerät gespeichert.</p>
+    <form method="dialog"><button class="btn start">Alles klar</button></form>
+</dialog>
+
+<div class="blitz" id="blitz" aria-hidden="true"></div>
+<div class="toast hidden" id="toast" role="status"></div>
+
+<script src="js/version.js?v=1"></script>
+<script src="js/audio.js?v=1"></script>
+<script src="js/metronom.js?v=1"></script>
+<script src="js/drehrad.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>
