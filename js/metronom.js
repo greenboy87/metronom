@@ -21,7 +21,7 @@ const metronom = {
     unterteilung: 1,
     klang: 'klick',
     trainer: { an: false, schritt: 5, alleTakte: 4, ziel: 140 },
-    stille: { an: false, hoeren: 2, still: 2 },
+    stille: { an: false, hoeren: 1, still: 1 },
 
     // Rueckrufe fuer die Anzeige
     beiSchlag: null,           // ({schlag, sub, takt, still}) im Moment des Erklingens

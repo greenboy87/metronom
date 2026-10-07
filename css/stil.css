@@ -221,13 +221,11 @@ html[data-theme="light"] .rad-spur { stroke: #e2e8f0; }
 .silbe { color: var(--text-schwach); padding: 0 .15rem; border-radius: 6px; transition: color .08s; }
 .silbe.haupt { color: var(--text-gedaempft); font-weight: 900; }
 .silbe.aktiv { color: var(--bg); background: var(--akzent); }
-body.stiller-takt .silbe.aktiv { background: var(--text-schwach); }
 
 .still-hinweis {
     background: var(--hoch-weich); color: var(--text); border: 1px solid var(--hoch);
     border-radius: 12px; padding: .5rem .9rem; font-weight: 800;
 }
-body.stiller-takt .schlag.aktiv { opacity: .55; }
 
 /* ---------- Einstellungen ---------- */
 .taktart-eigen { display: flex; align-items: center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; margin-top: .9rem; }

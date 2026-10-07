@@ -7,7 +7,10 @@ const SPEICHER_SCHLUESSEL = 'metronom-einstellungen';
 const $ = id => document.getElementById(id);
 
 /* ---------- Speichern / Laden ---------- */
-let uebungszeitMs = 0, blitzAn = true;
+/* Stand der gespeicherten Einstellungen. Hochzaehlen, wenn sich eine
+   Voreinstellung aendert, die auch bei bestehenden Geraeten greifen soll. */
+const EINSTELLUNGEN_STAND = 2;
+let uebungszeitMs = 0, blitzAn = false;
 
 function speichern() {
     try {
@@ -15,7 +18,8 @@ function speichern() {
             bpm: metronom.bpm, zaehler: metronom.zaehler, nenner: metronom.nenner,
             betonung: metronom.betonung, unterteilung: metronom.unterteilung,
             klang: metronom.klang, lautstaerke, trainer: metronom.trainer,
-            stille: metronom.stille, uebungszeitMs, blitzAn
+            stille: metronom.stille, uebungszeitMs, blitzAn,
+            stand: EINSTELLUNGEN_STAND
         }));
     } catch (e) { /* privater Modus o.ae. - dann eben ohne Speichern */ }
 }
@@ -34,9 +38,12 @@ function laden() {
     if (KLAENGE[d.klang]) metronom.klang = d.klang;
     if (Number.isFinite(d.lautstaerke)) lautstaerkeSetzen(d.lautstaerke);
     if (d.trainer && typeof d.trainer === 'object') Object.assign(metronom.trainer, d.trainer);
-    if (d.stille && typeof d.stille === 'object') Object.assign(metronom.stille, d.stille);
+    // Stand 2: Blinken aus und stille Takte 1/1 als neue Voreinstellung -
+    // aeltere gespeicherte Werte dafuer nicht uebernehmen.
+    const aktuell = d.stand >= EINSTELLUNGEN_STAND;
+    if (aktuell && d.stille && typeof d.stille === 'object') Object.assign(metronom.stille, d.stille);
     if (Number.isFinite(d.uebungszeitMs)) uebungszeitMs = d.uebungszeitMs;
-    if (typeof d.blitzAn === 'boolean') blitzAn = d.blitzAn;
+    if (aktuell && typeof d.blitzAn === 'boolean') blitzAn = d.blitzAn;
 }
 
 /* ---------- Toast ---------- */
@@ -132,15 +139,20 @@ function zaehlhilfeZeichnen() {
 /* ---------- Anzeige im Takt ---------- */
 let letzteSilbe = null;
 metronom.beiSchlag = ({ schlag, sub, still, art }) => {
-    if (letzteSilbe) letzteSilbe.classList.remove('aktiv');
-    letzteSilbe = $('zaehlhilfe').querySelector(`[data-pos="${schlag}-${sub}"]`);
-    if (letzteSilbe) letzteSilbe.classList.add('aktiv');
-
     $('still-hinweis').classList.toggle('hidden', !still);
     document.body.classList.toggle('stiller-takt', still);
 
+    if (letzteSilbe) letzteSilbe.classList.remove('aktiv');
+    letzteSilbe = null;
+    if (sub === 0) document.querySelectorAll('.schlag.aktiv').forEach(el => el.classList.remove('aktiv'));
+    // Im stillen Takt setzt auch jede Anzeige aus - sonst koennte man einfach
+    // dem Blinken folgen, statt das Tempo selbst zu halten.
+    if (still) return;
+
+    letzteSilbe = $('zaehlhilfe').querySelector(`[data-pos="${schlag}-${sub}"]`);
+    if (letzteSilbe) letzteSilbe.classList.add('aktiv');
+
     if (sub !== 0) return;
-    document.querySelectorAll('.schlag.aktiv').forEach(el => el.classList.remove('aktiv'));
     const k = $('schlaege').children[schlag];
     if (k) k.classList.add('aktiv');
 
@@ -149,7 +161,7 @@ metronom.beiSchlag = ({ schlag, sub, still, art }) => {
     void mitte.offsetWidth; // Animation neu starten
     if (art) mitte.classList.add(art === 'hoch' ? 'puls-hoch' : 'puls');
 
-    if (blitzAn && art && !still) {
+    if (blitzAn && art) {
         const b = $('blitz');
         b.className = 'blitz';
         void b.offsetWidth;
@@ -330,8 +342,8 @@ function trainerUebernehmen() {
     t.ziel = zahlAus('trainer-ziel', TEMPO_MIN, TEMPO_MAX, 140);
     const s = metronom.stille;
     s.an = $('stille-an').checked;
-    s.hoeren = zahlAus('stille-hoeren', 1, 16, 2);
-    s.still = zahlAus('stille-still', 1, 16, 2);
+    s.hoeren = zahlAus('stille-hoeren', 1, 16, 1);
+    s.still = zahlAus('stille-still', 1, 16, 1);
     speichern();
 }
 ['trainer-an', 'trainer-takte', 'trainer-schritt', 'trainer-ziel', 'stille-an', 'stille-hoeren', 'stille-still']
